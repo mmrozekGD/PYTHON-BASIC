@@ -13,11 +13,31 @@ Examples:
     user enters: hello, world, foo, bar, baz
     >>> read_numbers(5)
     No numbers entered
-
 """
 
 
 def read_numbers(n: int) -> str:
-    ...
+    sum = 0
+    count = 0
+    for i in range(n) :
+        pom = input()
+        try:
+            pomInt = int(pom)
+        except ValueError:
+            # input not a number so ignore
+            pass
+        else:
+            sum += pomInt
+            count +=1
+    result = ''
+    if count == 0:
+        result = 'no numbers entered'
+    else:
+        result = f'Avg: {round(sum/count,2)}'
+    return result
+
+print(read_numbers(5))
+
+        
 
 

@@ -25,19 +25,45 @@ Methods:
     Note that this method doesn't need object itself
 PEP8 comply strictly.
 """
-import datetime
+from datetime import datetime, timedelta
 
 
 class Teacher:
-    ...
+    def __init__(self,first_name,last_name):
+        self.first_name = first_name
+        self.last_name = last_name
+
+    def create_homework(self, task_text, days_to_complete):
+        deadline = datetime.now() + timedelta(days=days_to_complete)
+        return Homework(task_text,deadline,datetime.now())
+        
 
 
 class Student:
-    ...
+    def __init__(self,first_name,last_name):
+        self.first_name = first_name
+        self.last_name = last_name
+
+    def do_homework(self,homework):
+        if homework.is_active():
+            return homework
+        else:
+            print('You are late')
+            return None
+    
+    def __str__(self):
+        return f'Name: {self.first_name} Surname: {self.last_name}\n'
+
 
 
 class Homework:
-    ...
+    def __init__(self,text,deadline,created):
+        self.text = text
+        self.deadline = deadline
+        self.created = created
+
+    def is_active(self):
+        return datetime.now() < self.deadline
 
 
 if __name__ == '__main__':
@@ -58,3 +84,5 @@ if __name__ == '__main__':
 
     student.do_homework(oop_homework)
     student.do_homework(expired_homework)  # You are late
+
+    print(student)

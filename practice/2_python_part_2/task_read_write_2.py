@@ -22,3 +22,22 @@ def generate_words(n=20):
         words.append(word)
 
     return words
+
+from pathlib import Path
+
+CURR_DIRR = Path(__file__).parent
+RES_FILE1 = CURR_DIRR / 'file1.txt'
+RES_FILE2 = CURR_DIRR / 'file2.txt'
+
+words_list = generate_words()
+
+with open(RES_FILE1,'w', encoding='utf-8') as f:
+    for word in words_list:
+        line = word + '\n'
+        f.write(line)
+
+reversed_words_list = reversed(words_list)
+with open(RES_FILE2,'w', encoding='cp1252') as f:
+        line = ",".join(reversed_words_list)
+        f.write(line)
+
