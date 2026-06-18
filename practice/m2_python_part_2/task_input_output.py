@@ -19,7 +19,7 @@ Examples:
 def read_numbers(n: int) -> str:
     sum = 0
     count = 0
-    for i in range(n) :
+    for i in range(n):
         pom = input()
         try:
             pomInt = int(pom)
@@ -28,16 +28,13 @@ def read_numbers(n: int) -> str:
             pass
         else:
             sum += pomInt
-            count +=1
-    result = ''
+            count += 1
+    result = ""
     if count == 0:
-        result = 'no numbers entered'
+        result = "no numbers entered"
     else:
-        result = f'Avg: {round(sum/count,2)}'
+        result = f"Avg: {round(sum/count,2)}"
     return result
 
-print(read_numbers(5))
 
-        
-
-
+# print(read_numbers(5))

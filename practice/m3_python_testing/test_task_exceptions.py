@@ -8,14 +8,27 @@ TIP: to test output of print() function use capfd fixture
 https://stackoverflow.com/a/20507769
 """
 
+import pytest
+
+from practice.m2_python_part_2 import task_exceptions
+
 
 def test_division_ok(capfd):
-    ...
+    assert task_exceptions.division(2, 2) == 1
+    out, err = capfd.readouterr()
+    assert "Division finished" in out
 
 
 def test_division_by_zero(capfd):
-    ...
+    res = task_exceptions.division(2, 0)
+    assert res == None
+    out, err = capfd.readouterr()
+    assert "Division by 0" in out
+    assert "Division finished" in out
 
 
 def test_division_by_one(capfd):
-    ...
+    with pytest.raises(task_exceptions.DivisionByOneException):
+        res = task_exceptions.division(2, 1)
+    out, err = capfd.readouterr()
+    assert "Division finished" in out

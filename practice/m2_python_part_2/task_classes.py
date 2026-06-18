@@ -25,39 +25,44 @@ Methods:
     Note that this method doesn't need object itself
 PEP8 comply strictly.
 """
+
 from datetime import datetime, timedelta
 
 
+class NegativeDaysToCompleteException(Exception):
+    pass
+
+
 class Teacher:
-    def __init__(self,first_name,last_name):
+    def __init__(self, first_name, last_name):
         self.first_name = first_name
         self.last_name = last_name
 
     def create_homework(self, task_text, days_to_complete):
+        if days_to_complete < 0:
+            raise NegativeDaysToCompleteException
         deadline = datetime.now() + timedelta(days=days_to_complete)
-        return Homework(task_text,deadline,datetime.now())
-        
+        return Homework(task_text, deadline, datetime.now())
 
 
 class Student:
-    def __init__(self,first_name,last_name):
+    def __init__(self, first_name, last_name):
         self.first_name = first_name
         self.last_name = last_name
 
-    def do_homework(self,homework):
+    def do_homework(self, homework):
         if homework.is_active():
             return homework
         else:
-            print('You are late')
+            print("You are late")
             return None
-    
-    def __str__(self):
-        return f'Name: {self.first_name} Surname: {self.last_name}\n'
 
+    def __str__(self):
+        return f"Name: {self.first_name} Surname: {self.last_name}\n"
 
 
 class Homework:
-    def __init__(self,text,deadline,created):
+    def __init__(self, text, deadline, created):
         self.text = text
         self.deadline = deadline
         self.created = created
@@ -66,20 +71,20 @@ class Homework:
         return datetime.now() < self.deadline
 
 
-if __name__ == '__main__':
-    teacher = Teacher('Dmitry', 'Orlyakov')
-    student = Student('Vladislav', 'Popov')
+if __name__ == "__main__":
+    teacher = Teacher("Dmitry", "Orlyakov")
+    student = Student("Vladislav", "Popov")
     teacher.last_name  # Daniil
     student.first_name  # Petrov
 
-    expired_homework = teacher.create_homework('Learn functions', 0)
+    expired_homework = teacher.create_homework("Learn functions", 0)
     expired_homework.created  # Example: 2019-05-26 16:44:30.688762
     expired_homework.deadline  # 0:00:00
     expired_homework.text  # 'Learn functions'
 
     # create function from method and use it
     create_homework_too = teacher.create_homework
-    oop_homework = create_homework_too('create 2 simple classes', 5)
+    oop_homework = create_homework_too("create 2 simple classes", 5)
     oop_homework.deadline  # 5 days, 0:00:00
 
     student.do_homework(oop_homework)
