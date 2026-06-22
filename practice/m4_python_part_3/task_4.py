@@ -15,11 +15,46 @@ Example:
 """
 
 import argparse
+from faker import Faker
+from unittest.mock import patch
+
+
+class WrongFakerProviderException(Exception):
+    pass
 
 
 def print_name_address(args: argparse.Namespace) -> None:
-    ...
+    fake = Faker()
+    res = "{"
+    for el in args._get_kwargs():
+        key = el[0]
+        # This if is here only for the sake of test, normally there is no named argument "number_of_flags"
+        if key != "number_of_flags":
+            method_name = el[1]
+            if hasattr(fake, method_name):
+                method = getattr(fake, method_name)
+            else:
+                raise WrongFakerProviderException
+            val = method()
+            res += f'"{key}": "{val}", '
+    res = res[:-2] + "}"
+    print(res)
 
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("number_of_flags", type=int)
+    _, rest = parser.parse_known_args()
+
+    args = argparse.Namespace()
+
+    for item in rest:
+        tab = item[2:].strip().split("=")
+        i_key = tab[0]
+        i_val = tab[1]
+        setattr(args, i_key, i_val)
+
+    print_name_address(args)
 
 """
 Write test for print_name_address function
@@ -30,3 +65,22 @@ Example:
     >>> m.method()
     123
 """
+
+
+@patch(f"{__name__}.Faker")
+def test_print_name_adress(mock, capfd):
+    mock_faker = mock.return_value
+
+    mock_faker.name.return_value = "Chad Baird"
+    mock_faker.adress.return_value = "62323 Hobbs Green\nMaryshire, WY 48636"
+    mock_args = argparse.Namespace(
+        number_of_flags=2,
+        some_name="name",
+    )
+    setattr(mock_args, "fake-address", "adress")
+    print_name_address(mock_args)
+    out, err = capfd.readouterr()
+    assert (
+        '{"some_name": "Chad Baird", "fake-address": "62323 Hobbs Green\nMaryshire, WY 48636"}'
+        in out
+    )
