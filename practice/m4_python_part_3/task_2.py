@@ -28,7 +28,7 @@ def math_calculate(function: str, *args):
         raise OperationNotFoundException
 
 
-# print(math_calculate("ceil", 10.7))
+print(math_calculate("ceil", 10.7))
 """
 Write tests for math_calculate function
 """
