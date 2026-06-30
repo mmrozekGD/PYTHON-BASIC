@@ -12,7 +12,7 @@ def mainAPI():
         data = response.json()
 
         books = data["docs"]
-        for book in books[:20]:
+        for book in books[:5]:
             try:
                 author_name_list = book["author_name"]
             except KeyError:
