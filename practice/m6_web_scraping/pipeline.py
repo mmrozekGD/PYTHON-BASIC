@@ -60,7 +60,6 @@ def write_books_to_file(books: list[Book], output_dir: str, output_file: str) ->
         json.dump(books_dict, f, ensure_ascii=False, indent=4)
 
 
-# AI MADE
 def write_stats_formatted(stats: BookStats) -> None:
     # 1. Define strict column widths for left-alignment
     col1_width = 30
@@ -96,7 +95,6 @@ def write_stats_formatted(stats: BookStats) -> None:
     print()
 
 
-# AI MADE
 def write_budget_books_formatted(books: list[Book]) -> None:
     # 1. Dynamically find the longest title length
     # We set a baseline minimum of 30 so the table doesn't look too squished if titles are short
