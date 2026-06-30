@@ -3,6 +3,8 @@
 practice/m7_concurrency/task1_fibonacci/output/
 practice/m7_concurrency/task2_apod_api/output/
 
+!practice/m2_python_part_2/*.txt
+
 .DS_Store
 
 .env

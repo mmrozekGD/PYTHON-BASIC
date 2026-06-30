@@ -15,8 +15,9 @@ Example:
 """
 
 import argparse
-from faker import Faker
 from unittest.mock import patch
+
+from faker import Faker
 
 
 class WrongFakerProviderException(Exception):
@@ -25,11 +26,13 @@ class WrongFakerProviderException(Exception):
 
 def print_name_address(args: argparse.Namespace) -> None:
     fake = Faker()
-    res = "{"
-    for el in args._get_kwargs():
-        key = el[0]
-        # This if is here only for the sake of test, normally there is no named argument "number_of_flags"
-        if key != "number_of_flags":
+    arg_list = args._get_kwargs()
+    num = arg_list[0][1]
+    rest = arg_list[1:]
+    for _ in range(num):
+        res = "{"
+        for el in rest:
+            key = el[0]
             method_name = el[1]
             if hasattr(fake, method_name):
                 method = getattr(fake, method_name)
@@ -37,23 +40,20 @@ def print_name_address(args: argparse.Namespace) -> None:
                 raise WrongFakerProviderException
             val = method()
             res += f'"{key}": "{val}", '
-    res = res[:-2] + "}"
-    print(res)
+        res = res[:-2] + "}"
+        print(res)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("number_of_flags", type=int)
-    _, rest = parser.parse_known_args()
-
-    args = argparse.Namespace()
+    args, rest = parser.parse_known_args()
 
     for item in rest:
         tab = item[2:].strip().split("=")
         i_key = tab[0]
         i_val = tab[1]
         setattr(args, i_key, i_val)
-
     print_name_address(args)
 
 """
@@ -84,3 +84,4 @@ def test_print_name_adress(mock, capfd):
         '{"some_name": "Chad Baird", "fake-address": "62323 Hobbs Green\nMaryshire, WY 48636"}'
         in out
     )
+    assert mock_faker.name.call_count == 2

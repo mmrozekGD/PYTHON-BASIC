@@ -1,10 +1,10 @@
 import os
-from random import randint
-from pathlib import Path
 import queue
-from queue import Queue
-from threading import Thread
 import sys
+from pathlib import Path
+from queue import Empty, Queue
+from random import randint
+from threading import Lock, Thread
 
 CURR_DIR = Path(__file__).parent
 OUTPUT_DIR = CURR_DIR / "output"
@@ -39,7 +39,6 @@ def func1(array: list):
     tasks = Queue()
     for num in array:
         tasks.put(num)
-
     threads = [
         Thread(target=worker1, args=(tasks, OUTPUT_DIR)) for _ in range(NUM_WORKERS)
     ]
@@ -49,28 +48,37 @@ def func1(array: list):
     tasks.join()
 
 
-def worker2(task_q: Queue, result_file: str):
+def worker2(task_q: Queue, result_file: str, file_lock: Lock):
     while True:
         try:
-            task = task_q.get()
-        except task_q.empty:
+            task = task_q.get(block=False)
+        except Empty:
             return
-        str_to_write = task[0] + "," + task[1] + "\n"
-        with open(result_file, "a") as f:
-            f.write(str_to_write)
+        try:
+            str_to_write = task[0] + "," + task[1] + "\n"
+            with file_lock:
+                with open(result_file, "a") as f:
+                    f.write(str_to_write)
+        except Exception as exp:
+            raise exp
+        finally:
+            task_q.task_done()
 
 
 def func2(result_file: str):
     tasks2 = Queue()
-    for file in Path(result_file).parent.iterdir():
-        name = file.name
-        ord_num = name.split(".")[0]
-        with open(file) as f:
-            fib_num = f.read()
-        tasks2.put((ord_num, fib_num))
+    file_lock = Lock()
+    for item in Path(result_file).parent.iterdir():
+        if item.is_file() and item.suffix == ".txt":
+            name = item.name
+            ord_num = name.split(".")[0]
+            with open(item) as f:
+                fib_num = f.read()
+            tasks2.put((ord_num, fib_num))
 
     threads = [
-        Thread(target=worker2, args=(tasks2, result_file)) for _ in range(NUM_WORKERS)
+        Thread(target=worker2, args=(tasks2, result_file, file_lock))
+        for _ in range(NUM_WORKERS)
     ]
 
     [t.start() for t in threads]

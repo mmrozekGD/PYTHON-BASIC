@@ -14,7 +14,6 @@ import re
 
 
 def is_http_domain(domain: str) -> bool:
-    ...
     pattern = r"^https?://.+\.[a-zA-Z]+/?$"
     if re.match(pattern, domain):
         return True
@@ -27,16 +26,16 @@ write tests for is_http_domain function
 
 
 def test_is_http_domain_http():
-    assert is_http_domain("http://wikipedia.org") == True
+    assert is_http_domain("http://wikipedia.org")
 
 
 def test_is_http_domain_https():
-    assert is_http_domain("https://ru.wikipedia.org/") == True
+    assert is_http_domain("https://ru.wikipedia.org/")
 
 
 def test_is_http_domain_no_http():
-    assert is_http_domain("griddynamics.com") == False
+    assert not is_http_domain("griddynamics.com")
 
 
 def test_is_http_domain_dot_at_the_end():
-    assert is_http_domain("https://ru.wikipedia.") == False
+    assert not is_http_domain("https://ru.wikipedia.")

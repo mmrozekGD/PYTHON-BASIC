@@ -33,7 +33,7 @@ def read_numbers(n: int) -> str:
     if count == 0:
         result = "no numbers entered"
     else:
-        result = f"Avg: {round(sum/count,2)}"
+        result = f"Avg: {round(sum / count, 2)}"
     return result
 
 

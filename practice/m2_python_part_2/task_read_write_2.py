@@ -11,10 +11,12 @@ Example:
         file2.txt (content: "xyz,def,abc", encoding: CP1252)
 """
 
+from pathlib import Path
+
 
 def generate_words(n=20):
-    import string
     import random
+    import string
 
     words = list()
     for _ in range(n):
@@ -24,11 +26,9 @@ def generate_words(n=20):
     return words
 
 
-from pathlib import Path
-
-CURR_DIRR = Path(__file__).parent
-RES_FILE1 = CURR_DIRR / "file1.txt"
-RES_FILE2 = CURR_DIRR / "file2.txt"
+CURR_DIR = Path(__file__).parent
+RES_FILE1 = CURR_DIR / "file1.txt"
+RES_FILE2 = CURR_DIR / "file2.txt"
 
 
 def write_files(words_list, res_file1, res_file2):

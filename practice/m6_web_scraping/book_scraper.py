@@ -1,11 +1,13 @@
-from bs4 import BeautifulSoup
-import requests
-from string import Template
-from practice.m6_web_scraping.model import BookRaw
 import time
+from string import Template
+
+import requests
+from bs4 import BeautifulSoup
+
+from practice.m6_web_scraping.model import BookRaw
 
 
-class InvlaidURLScrapingException(Exception):
+class InvalidURLScrapingException(Exception):
     pass
 
 
@@ -15,39 +17,46 @@ class FetchingError(Exception):
 
 class BookScraper:
     def __init__(self, rate_limiting_delay=1):
-        self.catalog_page_url_templeate = Template(
+        self.catalog_page_url_template = Template(
             "https://books.toscrape.com/catalogue/page-${page_nr}.html"
         )
         self.delay = rate_limiting_delay
 
     def scrap_catalog_page(self, page_nr):
-        url = self.catalog_page_url_templeate.substitute(page_nr=page_nr)
-        page = requests.get(url)
+        url = self.catalog_page_url_template.substitute(page_nr=page_nr)
 
-        if page.status_code == 404:
-            raise InvlaidURLScrapingException
-        elif page.status_code != 200:
-            raise FetchingError
+        try:
+            response = requests.get(url, timeout=5)
 
-        soup = BeautifulSoup(page.content, "html.parser")
+            response.raise_for_status()
 
-        books_containers = soup.find_all(class_="product_pod")
+            soup = BeautifulSoup(response.content, "html.parser")
 
-        books = []
+            books_containers = soup.find_all(class_="product_pod")
 
-        for i in range(20):
-            rating_tag = books_containers[i].find("p")
-            rating_str = rating_tag.get("class")[1]
+            books = []
 
-            title_tag = books_containers[i].find("h3").find("a")
-            title_str = title_tag.get("title")
+            for i in range(20):
+                rating_tag = books_containers[i].find("p")
+                rating_str = rating_tag.get("class")[1]
 
-            price_tag = books_containers[i].find(class_="price_color")
-            price_str = price_tag.text
-            books.append(
-                BookRaw(title=title_str, price_raw=price_str, rating_raw=rating_str)
-            )
-        return books
+                title_tag = books_containers[i].find("h3").find("a")
+                title_str = title_tag.get("title")
+
+                price_tag = books_containers[i].find(class_="price_color")
+                price_str = price_tag.text
+                books.append(
+                    BookRaw(title=title_str, price_raw=price_str, rating_raw=rating_str)
+                )
+            return books
+        except requests.exceptions.HTTPError as e:
+            print(f"API Error ({e.response.status_code}): {e.response.text}")
+            raise e
+        except requests.exceptions.RequestException as e:
+            print(f"Network or Timeout Error: {e}")
+            raise e
+
+        return []
 
     def scrap_multiple_catalog_pages(self, page_from, page_to):
         books_raw = []

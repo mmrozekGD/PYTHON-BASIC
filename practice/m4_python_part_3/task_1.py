@@ -11,8 +11,9 @@ If entered date is from future, return negative value for number of days
     WrongFormatException
 """
 
-from datetime import datetime
 import re
+from datetime import datetime
+
 import pytest
 
 
@@ -57,4 +58,4 @@ def test_calculate_days_from_future():
 @pytest.mark.freeze_time("2026-06-17")
 def test_calculate_days_wrong_format():
     with pytest.raises(WrongFormatException):
-        diff = calculate_days("10-07-2021")
+        calculate_days("10-07-2021")
