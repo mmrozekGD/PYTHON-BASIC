@@ -34,5 +34,5 @@ def concat_files(data_dir, res_file):
         f.write(result_string)
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     concat_files(DATA_DIR, RES_FILE)

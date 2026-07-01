@@ -17,5 +17,5 @@ def calculate_power_with_difference(ints: List[int]) -> List[int]:
     return powered_ints
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     print(calculate_power_with_difference([1, 2, 3]))

@@ -21,7 +21,7 @@ def delete_from_list(list_to_clean: List, item_to_delete: Any) -> List:
     return list_to_clean
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     print(delete_from_list([1, 2, 3, 4, 3], 3))
     print(delete_from_list(["a", "b", "c", "b", "d"], "b"))
     print(delete_from_list([1, 2, 3], "b"))

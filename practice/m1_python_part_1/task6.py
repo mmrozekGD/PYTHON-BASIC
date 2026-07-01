@@ -30,5 +30,5 @@ def get_min_max(filename: str) -> Tuple[int, int]:
         return (temp_min, temp_max)
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     print(get_min_max("practice/m1_python_part_1/data6.txt"))

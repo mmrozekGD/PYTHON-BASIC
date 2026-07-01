@@ -4,7 +4,7 @@ Check if all methods working correctly.
 Also check corner-cases, for example if homework number of days is negative.
 """
 
-from datetime import datetime
+from datetime import timedelta
 
 import pytest
 
@@ -18,7 +18,7 @@ class TestTeacher:
     def test_create_homework_with_positve_days(self):
         homework = self.teacher.create_homework("Lorem", 3)
         assert isinstance(homework, task_classes.Homework)
-        assert isinstance(homework.deadline, datetime)
+        assert isinstance(homework.deadline, timedelta)
         assert homework.is_active()
 
     def test_create_homework_with_negative_days(self):
