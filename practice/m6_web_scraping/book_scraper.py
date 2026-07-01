@@ -7,14 +7,6 @@ from bs4 import BeautifulSoup
 from practice.m6_web_scraping.model import BookRaw
 
 
-class InvalidURLScrapingException(Exception):
-    pass
-
-
-class FetchingError(Exception):
-    pass
-
-
 class BookScraper:
     def __init__(self, rate_limiting_delay=1):
         self.catalog_page_url_template = Template(
