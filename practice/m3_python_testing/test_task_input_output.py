@@ -13,6 +13,7 @@ TIP: for testing builtin input() function create another function which return i
 """
 
 from unittest.mock import patch
+
 from practice.m2_python_part_2 import task_input_output
 
 

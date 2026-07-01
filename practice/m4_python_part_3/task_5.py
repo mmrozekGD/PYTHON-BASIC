@@ -7,8 +7,8 @@ Examples:
 """
 
 from typing import Tuple
+from unittest.mock import patch
 from urllib.request import urlopen
-from unittest.mock import patch, MagicMock
 
 
 def make_request(url: str) -> Tuple[int, str]:

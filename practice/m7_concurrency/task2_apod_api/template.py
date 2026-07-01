@@ -1,10 +1,11 @@
-import keyring
-import requests
 import json
 import os
 from pathlib import Path
-from queue import Queue, Empty
+from queue import Empty, Queue
 from threading import Thread
+
+import keyring
+import requests
 
 # API_KEY = "YOUR_KEY" # quite funny
 APOD_ENDPOINT = "https://api.nasa.gov/planetary/apod"
@@ -74,7 +75,6 @@ def download_apod_images(metadata: list):
 
 
 def main():
-
     if not os.path.exists(OUTPUT_DIR):
         os.makedirs(OUTPUT_DIR)
 

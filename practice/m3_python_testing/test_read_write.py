@@ -6,7 +6,6 @@ https://docs.pytest.org/en/6.2.x/tmpdir.html
 """
 
 from practice.m2_python_part_2 import task_read_write
-import pytest
 
 
 def test_task_read_write(tmp_path):

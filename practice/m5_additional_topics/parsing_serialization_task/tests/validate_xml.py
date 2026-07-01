@@ -1,6 +1,7 @@
-from statistics import mean
-from lxml import etree
 from pathlib import Path
+from statistics import mean
+
+from lxml import etree
 
 CURR_DIR = Path(__file__).parent
 RES_FILE = CURR_DIR.parent / "result.xml"
@@ -13,16 +14,16 @@ def check_result(xml_path: str):
     root = tree.getroot()
 
     assert root.tag == "weather"
-    assert not set(root.attrib.keys()).difference(
-        {"country", "date"}
-    ), "No 'country' or 'date' attrib in 'weather' root"
+    assert not set(root.attrib.keys()).difference({"country", "date"}), (
+        "No 'country' or 'date' attrib in 'weather' root"
+    )
 
     children = root.getchildren()
 
     assert set([child.tag for child in children]) == {
         "summary",
         "cities",
-    }, f'Invalid elements in "weather" root'
+    }, 'Invalid elements in "weather" root'
 
     for child in children:
         if child.tag == "summary":
@@ -33,15 +34,15 @@ def check_result(xml_path: str):
                 "warmest_place",
                 "windiest_place",
             }
-            assert (
-                set(child.attrib.keys()) == summary_attribs
-            ), f'Invalid attributes list in "summary" element: {set(child.attrib.keys()).difference(summary_attribs)}'
+            assert set(child.attrib.keys()) == summary_attribs, (
+                f'Invalid attributes list in "summary" element: {set(child.attrib.keys()).difference(summary_attribs)}'
+            )
             summary = child.attrib
 
         if child.tag == "cities":
-            assert (
-                len([c for c in child]) == 17
-            ), f"Invalid number of cities in XML: {len([c for c in child])}"
+            assert len([c for c in child]) == 17, (
+                f"Invalid number of cities in XML: {len([c for c in child])}"
+            )
             cities_summary = {}
             for city in child:
                 city_attribs = {
@@ -52,9 +53,9 @@ def check_result(xml_path: str):
                     "max_temp",
                     "max_wind_speed",
                 }
-                assert (
-                    set(city.attrib.keys()) == city_attribs
-                ), f"Invalid attributes in element {city.tag}: {set(city.attrib.keys()).difference(city_attribs)}"
+                assert set(city.attrib.keys()) == city_attribs, (
+                    f"Invalid attributes in element {city.tag}: {set(city.attrib.keys()).difference(city_attribs)}"
+                )
                 cities_summary[city.tag] = city.attrib
 
                 if city.tag == "Seville":
@@ -72,34 +73,34 @@ def check_result(xml_path: str):
     mean_temp = round(
         mean([float(values["mean_temp"]) for city, values in cities_summary.items()]), 2
     )
-    assert (
-        float(summary["mean_temp"]) == mean_temp
-    ), "Incorrect mean temperature in summary."
+    assert float(summary["mean_temp"]) == mean_temp, (
+        "Incorrect mean temperature in summary."
+    )
 
     assert summary.get("warmest_place") == "Palma", "The warmest place is incorrect"
     assert max(
         cities_summary.items(), key=lambda item: float(item[1].get("mean_temp"))
-    )[0] == summary.get(
-        "warmest_place"
-    ), "The warmest place is incorrect. You need to find city with maximum mean temperature"
+    )[0] == summary.get("warmest_place"), (
+        "The warmest place is incorrect. You need to find city with maximum mean temperature"
+    )
 
-    assert (
-        summary.get("coldest_place") == "Valladolid"
-    ), "The coldest place is incorrect"
+    assert summary.get("coldest_place") == "Valladolid", (
+        "The coldest place is incorrect"
+    )
     assert min(
         cities_summary.items(), key=lambda item: float(item[1].get("mean_temp"))
-    )[0] == summary.get(
-        "coldest_place"
-    ), "The coldest place is incorrect. You need to find city with minimum mean temperature"
+    )[0] == summary.get("coldest_place"), (
+        "The coldest place is incorrect. You need to find city with minimum mean temperature"
+    )
 
-    assert (
-        summary.get("windiest_place") == "Pamplona"
-    ), "The windiest place is incorrect"
+    assert summary.get("windiest_place") == "Pamplona", (
+        "The windiest place is incorrect"
+    )
     assert max(
         cities_summary.items(), key=lambda item: float(item[1].get("mean_wind_speed"))
-    )[0] == summary.get(
-        "windiest_place"
-    ), "The coldest place is incorrect. You need to find city with maximum wind speed"
+    )[0] == summary.get("windiest_place"), (
+        "The coldest place is incorrect. You need to find city with maximum wind speed"
+    )
 
     print("Success!")
 

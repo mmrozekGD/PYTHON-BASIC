@@ -19,7 +19,6 @@ from pathlib import Path
 CURR_DIR = Path(__file__).parent
 DATA_DIR = CURR_DIR / "files"
 RES_FILE = CURR_DIR / "result.txt"
-print(DATA_DIR)
 
 
 def concat_files(data_dir, res_file):
@@ -35,4 +34,5 @@ def concat_files(data_dir, res_file):
         f.write(result_string)
 
 
-concat_files(DATA_DIR, RES_FILE)
+if __name__ == "__main__":
+    concat_files(DATA_DIR, RES_FILE)

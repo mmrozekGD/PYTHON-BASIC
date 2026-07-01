@@ -1,14 +1,14 @@
 import json
-from pathlib import Path
 import math
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 CURR_DIR = Path(__file__).parent
 DATA_DIR = CURR_DIR / "source_data"
 RES_FILE = CURR_DIR / "result.xml"
 
 
-def processCity(data: str) -> str:
+def process_city(data: str) -> str:
     """
     Function to calculate min, mean, max temp and wind for given city JSON data.
 
@@ -55,7 +55,7 @@ def create_xml(
 ):
     root = ET.Element("weather", country="Spain", date="2021-09-25")
 
-    summary_node = ET.SubElement(
+    ET.SubElement(
         root,
         "summary",
         mean_temp=str(round(mean_temp, 2)),
@@ -68,7 +68,7 @@ def create_xml(
     cities_node = ET.SubElement(root, "cities")
 
     for city_name, city_data in cities_data:
-        child_node = ET.SubElement(
+        ET.SubElement(
             cities_node,
             city_name,
             mean_temp=str(round(city_data["mean_temp"], 2)),
@@ -87,8 +87,7 @@ def create_xml(
 
 
 if __name__ == "__main__":
-
-    citiesData = []
+    cities_data = []
 
     max_avg_temp = -math.inf
     max_avg_temp_city = ""
@@ -101,11 +100,10 @@ if __name__ == "__main__":
     mean_winds = []
 
     for file in DATA_DIR.iterdir():
-
         with open(file / "2021_09_25.json") as f:
             city_name = "_".join(file.name.split())
             data = json.load(f)
-        city_json = processCity(data)
+        city_json = process_city(data)
         if city_json["mean_temp"] > max_avg_temp:
             max_avg_temp = city_json["mean_temp"]
             max_avg_temp_city = city_name
@@ -117,7 +115,7 @@ if __name__ == "__main__":
             max_avg_wind_city = city_name
         mean_temps.append(city_json["mean_temp"])
         mean_winds.append(city_json["mean_wind"])
-        citiesData.append((city_name, city_json))
+        cities_data.append((city_name, city_json))
 
     great_avg_temp = sum(mean_temps) / len(mean_temps)
     great_avg_wind = sum(mean_winds) / len(mean_winds)
@@ -128,6 +126,6 @@ if __name__ == "__main__":
         min_avg_temp_city,
         max_avg_temp_city,
         max_avg_wind_city,
-        citiesData,
+        cities_data,
         RES_FILE,
     )

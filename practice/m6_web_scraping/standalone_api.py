@@ -12,15 +12,20 @@ def mainAPI():
         data = response.json()
 
         books = data["docs"]
-
-        for book in books[:3]:
-            author_name_list = book["author_name"]
-            first_publish_year = book["first_publish_year"]
+        for book in books[:5]:
+            try:
+                author_name_list = book["author_name"]
+            except KeyError:
+                author_name_list = ["Unknown"]
+            try:
+                first_publish_year = book["first_publish_year"]
+            except KeyError:
+                first_publish_year = "Unknown"
             title = book["title"]
 
             print("Book From API:")
             print(f"title: {title}")
-            print(f"Auhtor(s): {", ".join(author_name_list)[:-1]}")
+            print(f"Auhtor(s): {', '.join(author_name_list)}")
             print(f"First publish year: {first_publish_year}")
             print()
 

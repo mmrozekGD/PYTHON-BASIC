@@ -1,8 +1,9 @@
-from practice.m6_web_scraping.model import Book, BookRaw
-from typing import NamedTuple
-from dataclasses import asdict
 import json
 import os
+from dataclasses import asdict
+from typing import NamedTuple
+
+from practice.m6_web_scraping.model import Book, BookRaw
 
 
 class BookStats(NamedTuple):
@@ -12,23 +13,25 @@ class BookStats(NamedTuple):
     max_price: float
 
 
-reviewDict = {"One": 1, "Two": 2, "Three": 3, "Four": 4, "Five": 5}
+RATING_MAP = {"One": 1, "Two": 2, "Three": 3, "Four": 4, "Five": 5}
 
 
-def standarize_books(books_raw: list[BookRaw]) -> list[Book]:
-    books_standarized = []
+def standardize_books(books_raw: list[BookRaw]) -> list[Book]:
+    books_standardized = []
     for item_raw in books_raw:
         price = float(item_raw.price_raw[1:])
-        rating = reviewDict[item_raw.rating_raw]
-        books_standarized.append(Book(title=item_raw.title, price=price, rating=rating))
-    return books_standarized
+        rating = RATING_MAP[item_raw.rating_raw]
+        books_standardized.append(
+            Book(title=item_raw.title, price=price, rating=rating)
+        )
+    return books_standardized
 
 
 def filter_by_rating(books: list[Book], rating: int) -> list[Book]:
     return [book for book in books if book.rating == rating]
 
 
-def sort_by_price_acs(books: list[Book]) -> list[Book]:
+def sort_by_price_asc(books: list[Book]) -> list[Book]:
     return sorted(books, key=lambda book: book.price)  # asc
 
 
@@ -57,7 +60,6 @@ def write_books_to_file(books: list[Book], output_dir: str, output_file: str) ->
         json.dump(books_dict, f, ensure_ascii=False, indent=4)
 
 
-# AI MADE
 def write_stats_formatted(stats: BookStats) -> None:
     # 1. Define strict column widths for left-alignment
     col1_width = 30
@@ -93,7 +95,6 @@ def write_stats_formatted(stats: BookStats) -> None:
     print()
 
 
-# AI MADE
 def write_budget_books_formatted(books: list[Book]) -> None:
     # 1. Dynamically find the longest title length
     # We set a baseline minimum of 30 so the table doesn't look too squished if titles are short

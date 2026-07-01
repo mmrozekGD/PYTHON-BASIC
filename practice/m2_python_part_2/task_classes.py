@@ -41,8 +41,7 @@ class Teacher:
     def create_homework(self, task_text, days_to_complete):
         if days_to_complete < 0:
             raise NegativeDaysToCompleteException
-        deadline = datetime.now() + timedelta(days=days_to_complete)
-        return Homework(task_text, deadline, datetime.now())
+        return Homework(task_text, days_to_complete)
 
 
 class Student:
@@ -62,13 +61,13 @@ class Student:
 
 
 class Homework:
-    def __init__(self, text, deadline, created):
+    def __init__(self, text: str, days_to_complete: int):
         self.text = text
-        self.deadline = deadline
-        self.created = created
+        self.deadline = timedelta(days=days_to_complete)
+        self.created = datetime.now()
 
-    def is_active(self):
-        return datetime.now() < self.deadline
+    def is_active(self) -> bool:
+        return datetime.now() < self.created + self.deadline
 
 
 if __name__ == "__main__":
