@@ -44,4 +44,5 @@ def write_files(words_list, res_file1, res_file2):
         f.write(line)
 
 
-write_files(generate_words(), RES_FILE1, RES_FILE2)
+if __name__ == "main":
+    write_files(generate_words(), RES_FILE1, RES_FILE2)

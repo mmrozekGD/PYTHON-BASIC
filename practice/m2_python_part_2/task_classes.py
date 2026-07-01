@@ -61,13 +61,13 @@ class Student:
 
 
 class Homework:
-    def __init__(self, text, days_to_complete):
+    def __init__(self, text: str, days_to_complete: int):
         self.text = text
-        self.deadline = datetime.now() + timedelta(days=days_to_complete)
+        self.deadline = timedelta(days=days_to_complete)
         self.created = datetime.now()
 
-    def is_active(self):
-        return datetime.now() < self.deadline
+    def is_active(self) -> bool:
+        return datetime.now() < self.created + self.deadline
 
 
 if __name__ == "__main__":

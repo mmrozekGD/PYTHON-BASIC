@@ -54,15 +54,11 @@ def worker2(task_q: Queue, result_file: str, file_lock: Lock):
             task = task_q.get(block=False)
         except Empty:
             return
-        try:
-            str_to_write = task[0] + "," + task[1] + "\n"
-            with file_lock:
-                with open(result_file, "a") as f:
-                    f.write(str_to_write)
-        except Exception as exp:
-            raise exp
-        finally:
-            task_q.task_done()
+        str_to_write = task[0] + "," + task[1] + "\n"
+        with file_lock:
+            with open(result_file, "a") as f:
+                f.write(str_to_write)
+        task_q.task_done()
 
 
 def func2(result_file: str):

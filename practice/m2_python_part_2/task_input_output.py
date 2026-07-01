@@ -37,4 +37,5 @@ def read_numbers(n: int) -> str:
     return result
 
 
-# print(read_numbers(5))
+if __name__ == "main":
+    print(read_numbers(5))

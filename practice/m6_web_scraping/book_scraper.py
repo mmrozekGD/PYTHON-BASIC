@@ -56,8 +56,6 @@ class BookScraper:
             print(f"Network or Timeout Error: {e}")
             raise e
 
-        return []
-
     def scrap_multiple_catalog_pages(self, page_from, page_to):
         books_raw = []
         for page_nr in range(page_from, page_to + 1):
